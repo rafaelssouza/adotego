@@ -1,12 +1,21 @@
 package br.com.senai.pi.model;
 
 public class Endereco {
-	
+
+	private Long id;
 	private String uf;
 	private String cidade;
 	private String bairro;
 	private String rua;
 	private String cep;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getUf() {
 		return uf;
@@ -47,9 +56,9 @@ public class Endereco {
 	public void setCep(String cep) {
 		this.cep = cep;
 	}
-	
+
 	@Override
 	public String toString() {
-		return this.uf+this.cidade+this.bairro+this.rua+this.cep;
+		return this.uf + this.cidade + this.bairro + this.rua + this.cep;
 	}
 }
