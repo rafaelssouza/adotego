@@ -40,7 +40,6 @@ public class Pessoa {
 		this.email = email;
 	}
 
-	
 	public Endereco getEndereco() {
 		return endereco;
 	}
@@ -51,7 +50,8 @@ public class Pessoa {
 
 	@Override
 	public String toString() {
-		return "Nome :" + nome + "Telefone:" + telefone + "Email:"+email;
+		return "Id:" + id + "Nome :" + nome + "Telefone:" + telefone + "Email:"
+				+ email;
 	}
 
 }

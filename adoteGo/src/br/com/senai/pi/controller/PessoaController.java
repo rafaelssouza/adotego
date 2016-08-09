@@ -33,4 +33,10 @@ public class PessoaController extends Pessoa {
 		dao.removeById(id);
 		System.out.println("Pessoa removida com sucesso");
 	}
+	
+	public Pessoa getPessoaPorId(Long id){
+		Pessoa p = new Pessoa();
+		p = dao.getPessoaByID(id);
+		return p;	
+	}
 }

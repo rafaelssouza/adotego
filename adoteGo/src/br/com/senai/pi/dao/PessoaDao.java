@@ -193,8 +193,9 @@ public class PessoaDao {
 				// Recupera o nome do banco e atribui ele ao objeto
 				pessoa.setNome(rset.getString("nome"));
 
+				pessoa.setTelefone(rset.getString("telefone"));
 				// Recupera a idade do banco e atribui ele ao objeto
-				pessoa.setTelefone(rset.getString("email"));
+				pessoa.setEmail(rset.getString("email"));
 
 				// Adiciono o contato recuperado, a lista de contatos
 				pessoas.add(pessoa);
@@ -227,6 +228,65 @@ public class PessoaDao {
 		}
 
 		return pessoas;
+	}
+
+	// Pesquisa por id
+	public Pessoa getPessoaByID(Long id) {
+
+		String sql = "SELECT * FROM pessoa WHERE id = ?";
+
+		Connection conn = null;
+		PreparedStatement pstm = null;
+		ResultSet rset = null;
+		Pessoa pessoa = new Pessoa();
+		// Classe que vai recuperar os dados do banco de dados
+
+		try {
+			
+			conn = ConnectionFactory.createConnectionToMySQL();
+
+			pstm = conn.prepareStatement(sql);
+			pstm.setLong(1, id);
+			rset = pstm.executeQuery();
+			
+			
+			// Enquanto existir dados no banco de dados, faça
+			while (rset.next()) {
+
+				// Recupera o id do banco e atribui ele ao objeto
+				//pessoa.setId(rset.getLong("id"));
+
+				// Recupera o nome do banco e atribui ele ao objeto
+				pessoa.setNome(rset.getString("nome"));
+
+				pessoa.setTelefone(rset.getString("telefone"));
+				// Recupera a idade do banco e atribui ele ao objeto
+				pessoa.setEmail(rset.getString("email"));
+
+			}
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		} finally {
+
+			try {
+
+				if (pstm != null) {
+
+					pstm.close();
+				}
+
+				if (conn != null) {
+					conn.close();
+				}
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}
+		}
+
+		return pessoa;
 	}
 
 }
