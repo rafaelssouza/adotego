@@ -36,24 +36,30 @@ public class Principal extends JFrame {
 	private JTextField txtBairro;
 	private JTextField txtUf;
 	private JTextField txtCidade;
-
+	private boolean editar;
 	PessoaController pessoa;
 	private static Principal pr;
 	EnderecoController endereco;
 	private JTextField txtTelCelular;
 	private JTextField txtTelResidencial;
+	private JButton btnSalvar;
+	private JButton btnCancelar;
+	private JTextField txtIdpessoa;
 
 	/**
 	 * Launch the application.
 	 */
-	
-	public static Principal getInstance(){
-		if(pr == null){
+	/*
+	 * METODO RESPONSAVEL POR VERIFICAR SE JÁ EXISTE UMA INSTANCIA DA TELA
+	 * PRINCIPAL CASO EXISTA O METODO RETORNA NULL
+	 */
+	public static Principal getInstance() {
+		if (pr == null) {
 			pr = new Principal();
 		}
 		return pr;
 	}
-	
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -68,9 +74,10 @@ public class Principal extends JFrame {
 			}
 		});
 	}
-	
-	public void atualizarPrincipal(Pessoa p) {
-		//super("Pessoas");
+
+	// HABILITA OS CAMPOS DE TEXTO NO CADASTRO DA PESSOA AO CLICAR EM INSERIR NA
+	// TELA ListarPessoas
+	public String inserir() {
 		txtNome.setEditable(true);
 		txtTelCelular.setEditable(true);
 		txtTelResidencial.setEditable(true);
@@ -81,15 +88,41 @@ public class Principal extends JFrame {
 		txtCidade.setEditable(true);
 		txtNumRes.setEditable(true);
 		txtCep.setEditable(true);
-		
+		btnSalvar.setEnabled(true);
+		btnCancelar.setEnabled(true);
+
+		return null;
+
+	}
+
+	// RETORNA OS DADOS DA TELA ListarPessoas PARA POSSIVEL ATUALIZACAO
+	public void atualizarPrincipal(Pessoa p) {
+		btnSalvar.setEnabled(true);
+
+		txtNome.setEditable(true);
+		txtTelCelular.setEditable(true);
+		txtTelResidencial.setEditable(true);
+		txtEmail.setEditable(true);
+		txtRua.setEditable(true);
+		txtBairro.setEditable(true);
+		txtUf.setEditable(true);
+		txtCidade.setEditable(true);
+		txtNumRes.setEditable(true);
+		txtCep.setEditable(true);
+
+		txtIdpessoa.setText(p.getId().toString());
 		txtNome.setText(p.getNome());
 		txtTelCelular.setText(p.getTelefone());
 		txtTelResidencial.setText(p.getTelefone());
 		txtEmail.setText(p.getEmail());
-		//txtCep.setText(p.getEndereco().getCep());
-		//txtUf.setText(p.getEndereco().getUf());
-		//txtRua.setText(p.getEndereco().getRua());
-		
+
+		txtRua.setText(p.getEndereco().getRua());
+		txtBairro.setText(p.getEndereco().getBairro());
+		txtCidade.setText(p.getEndereco().getCidade());
+		txtCep.setText(p.getEndereco().getCep());
+		txtUf.setText(p.getEndereco().getUf());
+
+		editar = true;
 	}
 
 	public Principal(DefaultTableModel md) {
@@ -159,6 +192,14 @@ public class Principal extends JFrame {
 		layeredPane_1.add(txtTelResidencial);
 		txtTelResidencial.setColumns(10);
 
+		txtIdpessoa = new JTextField();
+		txtIdpessoa.setEnabled(false);
+		txtIdpessoa.setEditable(false);
+		txtIdpessoa.setVisible(false);
+		txtIdpessoa.setBounds(113, 283, 114, 19);
+		layeredPane_1.add(txtIdpessoa);
+		txtIdpessoa.setColumns(10);
+
 		JLayeredPane layeredPane_2 = new JLayeredPane();
 		layeredPane_2.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null,
 				null, null, null));
@@ -225,8 +266,8 @@ public class Principal extends JFrame {
 		layeredPane_2.add(txtCidade);
 		txtCidade.setColumns(10);
 
-		// Cadastro Pessoa
-		final JButton btnSalvar = new JButton("Salvar");
+		// CADASTRAR OU ATUALIZAR PESSOA
+		btnSalvar = new JButton("Salvar");
 		btnSalvar.setEnabled(false);
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -249,14 +290,21 @@ public class Principal extends JFrame {
 					pessoa.setTelefone(txtTelResidencial.getText());
 					pessoa.setEmail(txtEmail.getText());
 					pessoa.setEndereco(endereco);
-					pessoa.salvar(pessoa);
+					if (editar == false) {
+						pessoa.salvar(pessoa);
+					} else {
+						pessoa.setId(Integer.parseInt(txtIdpessoa.getText()));
+						pessoa.update(pessoa);
+						editar = false;
+					}
 				}
 			}
 		});
 		btnSalvar.setBounds(248, 338, 117, 25);
 		panel_pessoa.add(btnSalvar);
 
-		final JButton btnCancelar = new JButton("Cancelar");
+		// LIMPAR OS CAMPOS DE TEXTO AO CANCELAR
+		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setEnabled(false);
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -268,36 +316,11 @@ public class Principal extends JFrame {
 		btnCancelar.setBounds(387, 338, 117, 25);
 		panel_pessoa.add(btnCancelar);
 
-		JPanel panel_animal = new JPanel();
-		tabbedPane.addTab("Animal", null, panel_animal, null);
-
 		JLayeredPane layeredPane = new JLayeredPane();
 		layeredPane.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null,
 				null, null, null));
 		layeredPane.setBounds(12, 12, 774, 85);
 		contentPane.add(layeredPane);
-
-		// Habilita os campos de texto para cadastro
-		JButton btnNewButton = new JButton("Pessoa");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				txtNome.setEditable(true);
-				txtTelCelular.setEditable(true);
-				txtTelResidencial.setEditable(true);
-				txtEmail.setEditable(true);
-				txtRua.setEditable(true);
-				txtBairro.setEditable(true);
-				txtUf.setEditable(true);
-				txtCidade.setEditable(true);
-				txtNumRes.setEditable(true);
-				txtCep.setEditable(true);
-				btnSalvar.setEnabled(true);
-				btnCancelar.setEnabled(true);
-			}
-		});
-
-		btnNewButton.setBounds(12, 12, 92, 61);
-		layeredPane.add(btnNewButton);
 
 		JButton btnNewButton_1 = new JButton("Animal");
 		btnNewButton_1.addActionListener(new ActionListener() {
@@ -335,6 +358,27 @@ public class Principal extends JFrame {
 		});
 		btnListasPessoas.setBounds(392, 12, 117, 25);
 		layeredPane.add(btnListasPessoas);
+
+		// Habilita os campos de texto para cadastro ao clicar no botão Pessoa
+		JButton btnNewButton = new JButton("Pessoa");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				txtNome.setEditable(true);
+				txtTelCelular.setEditable(true);
+				txtTelResidencial.setEditable(true);
+				txtEmail.setEditable(true);
+				txtRua.setEditable(true);
+				txtBairro.setEditable(true);
+				txtUf.setEditable(true);
+				txtCidade.setEditable(true);
+				txtNumRes.setEditable(true);
+				txtCep.setEditable(true);
+				btnSalvar.setEnabled(true);
+				btnCancelar.setEnabled(true);
+			}
+		});
+		btnNewButton.setBounds(12, 12, 92, 61);
+		layeredPane.add(btnNewButton);
 
 	}
 }

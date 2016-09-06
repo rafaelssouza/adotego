@@ -55,7 +55,7 @@ public class ListarPessoas extends JFrame {
 		setVisible(true);
 		btInserir.addActionListener(new BtInserirListener());
 		btEditar.addActionListener(new BtEditarListener());
-	//	btExcluir.addActionListener(new BtExcluirListener());
+		btExcluir.addActionListener(new BtExcluirListener());
 	}
 
 	private void criaJTable() {
@@ -74,8 +74,9 @@ public class ListarPessoas extends JFrame {
 	private class BtInserirListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			Principal princ = new Principal(modelo);
-			princ.setVisible(true);
+			Principal.getInstance().inserir();
+			
+			dispose();
 		}
 	}
 
@@ -89,21 +90,35 @@ public class ListarPessoas extends JFrame {
 		}
 	}
 	
-
+	//EDITAR PESSOA
 	private class BtEditarListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
 			int linhaSelecionada = -1;
 			linhaSelecionada = tabela.getSelectedRow();
 			if (linhaSelecionada >= 0) {
-				Long idContato = (Long) tabela.getValueAt(linhaSelecionada, 0);
+				int idContato =  (int) tabela.getValueAt(linhaSelecionada, 0);
 				PessoaController pController = new PessoaController();
 				
 				Principal.getInstance().atualizarPrincipal(pController.getPessoaPorId(idContato));
-				
-				//AtualizarContato ic = new AtualizarContato(modelo, idContato, linhaSelecionada);
-				//ic.setVisible(true);
+
 				dispose();
+			} else {
+				JOptionPane.showMessageDialog(null, "É necesário selecionar uma linha.");
+			}
+		}
+	}
+	//EXCLUIR PESSOA
+	private class BtExcluirListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent e) {
+			int linhaSelecionada = -1;
+			linhaSelecionada = tabela.getSelectedRow();
+			if (linhaSelecionada >= 0) {
+				int idContato = (int) tabela.getValueAt(linhaSelecionada, 0);
+				PessoaController pController = new PessoaController();
+				pController.removerPorId(idContato);
+				modelo.removeRow(linhaSelecionada);
 			} else {
 				JOptionPane.showMessageDialog(null, "É necesário selecionar uma linha.");
 			}

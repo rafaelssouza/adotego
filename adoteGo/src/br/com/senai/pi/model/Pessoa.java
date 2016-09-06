@@ -2,18 +2,18 @@ package br.com.senai.pi.model;
 
 public class Pessoa {
 
-	private Long id;
+	private Integer id;
 	private String nome;
 	private String telefone;
 	private String email;
 	private Endereco endereco;
 
-	public void setId(Long id) {
-		this.id = id;
+	public Integer getId() {
+		return id;
 	}
 
-	public Long getId() {
-		return id;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getNome() {

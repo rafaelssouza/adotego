@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.senai.pi.controller.EnderecoController;
+import br.com.senai.pi.controller.PessoaController;
 import br.com.senai.pi.model.Endereco;
 import br.com.senai.pi.model.Pessoa;
 
@@ -76,7 +78,7 @@ public class PessoaDao {
 		}
 	}
 
-	public void removeById(Long id) {
+	public void removeById(int id) {
 
 		String sql = "DELETE FROM pessoa WHERE id = ?";
 
@@ -115,8 +117,8 @@ public class PessoaDao {
 
 	public void update(Pessoa pessoa) {
 
-		String sql = "UPDATE pessoa SET nome = ?, telefone = ?, email = ?"
-				+ " WHERE id = ?";
+		String sql = "UPDATE pessoa SET nome = ?, telefone = ?, email = ?, rua = ?, cidade = ?,"
+				+ " uf = ?, bairro = ?, cep = ? WHERE id = ?";
 
 		Connection conn = null;
 		PreparedStatement pstm = null;
@@ -128,15 +130,23 @@ public class PessoaDao {
 			// Cria um PreparedStatment, classe usada para executar a query
 			pstm = conn.prepareStatement(sql);
 
-			// Adiciona o valor do primeiro parâmetro da sql
 			pstm.setString(1, pessoa.getNome());
-			// Adicionar o valor do segundo parâmetro da sql
+
 			pstm.setString(2, pessoa.getTelefone());
-			// Adiciona o valor do terceiro parâmetro da sql
+
 			pstm.setString(3, pessoa.getEmail());
 
-			pstm.setLong(4, pessoa.getId());
+			pstm.setString(4, pessoa.getEndereco().getRua());
 
+			pstm.setString(5, pessoa.getEndereco().getCidade());
+
+			pstm.setString(6, pessoa.getEndereco().getUf());
+
+			pstm.setString(7, pessoa.getEndereco().getBairro());
+
+			pstm.setString(8, pessoa.getEndereco().getCep());
+
+			pstm.setInt(9, pessoa.getId());
 			// Executa a sql para inserção dos dados
 			pstm.execute();
 
@@ -188,7 +198,7 @@ public class PessoaDao {
 				Pessoa pessoa = new Pessoa();
 
 				// Recupera o id do banco e atribui ele ao objeto
-				pessoa.setId(rset.getLong("id"));
+				pessoa.setId(rset.getInt("id"));
 
 				// Recupera o nome do banco e atribui ele ao objeto
 				pessoa.setNome(rset.getString("nome"));
@@ -231,39 +241,43 @@ public class PessoaDao {
 	}
 
 	// Pesquisa por id
-	public Pessoa getPessoaByID(Long id) {
+	public Pessoa getPessoaByID(Integer id) {
 
 		String sql = "SELECT * FROM pessoa WHERE id = ?";
 
 		Connection conn = null;
 		PreparedStatement pstm = null;
 		ResultSet rset = null;
-		Pessoa pessoa = new Pessoa();
+		PessoaController pessoa = new PessoaController();
+		EnderecoController endereco = new EnderecoController();
 		// Classe que vai recuperar os dados do banco de dados
 
 		try {
-			
+
 			conn = ConnectionFactory.createConnectionToMySQL();
 
 			pstm = conn.prepareStatement(sql);
 			pstm.setLong(1, id);
 			rset = pstm.executeQuery();
-			
-			
+
 			// Enquanto existir dados no banco de dados, faça
-			while (rset.next()) {
+			rset.next();
 
-				// Recupera o id do banco e atribui ele ao objeto
-				//pessoa.setId(rset.getLong("id"));
+			pessoa.setId(rset.getInt("id"));
 
-				// Recupera o nome do banco e atribui ele ao objeto
-				pessoa.setNome(rset.getString("nome"));
+			pessoa.setNome(rset.getString("nome"));
+			pessoa.setTelefone(rset.getString("telefone"));
+			pessoa.setEmail(rset.getString("email"));
+			// Endereço
 
-				pessoa.setTelefone(rset.getString("telefone"));
-				// Recupera a idade do banco e atribui ele ao objeto
-				pessoa.setEmail(rset.getString("email"));
+			endereco.setRua(rset.getString("rua"));
+			endereco.setBairro(rset.getString("bairro"));
+			endereco.setCidade(rset.getString("cidade"));
+			endereco.setCep(rset.getString("cep"));
+			endereco.setUf(rset.getString("uf"));
 
-			}
+			pessoa.setEndereco(endereco);
+
 		} catch (Exception e) {
 
 			e.printStackTrace();
