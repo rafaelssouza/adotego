@@ -15,8 +15,12 @@ import javax.swing.table.DefaultTableModel;
 import br.com.senai.pi.controller.PessoaController;
 import br.com.senai.pi.model.Pessoa;
 
-public class ListarPessoas extends JFrame {
+public class ListarPessoaUI extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
 	 * Create the frame.
 	 */
@@ -29,7 +33,7 @@ public class ListarPessoas extends JFrame {
 	private JButton btEditar;
 	private DefaultTableModel modelo = new DefaultTableModel();
 
-	public ListarPessoas() {
+	public ListarPessoaUI() {
 		super("Pessoas");
 		criaJTable();
 		criaJanela();
@@ -74,7 +78,7 @@ public class ListarPessoas extends JFrame {
 	private class BtInserirListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
-			Principal.getInstance().inserir();
+			PrincipalUI.getInstance().inserir();
 			
 			dispose();
 		}
@@ -100,7 +104,7 @@ public class ListarPessoas extends JFrame {
 				int idContato =  (int) tabela.getValueAt(linhaSelecionada, 0);
 				PessoaController pController = new PessoaController();
 				
-				Principal.getInstance().atualizarPrincipal(pController.getPessoaPorId(idContato));
+				PrincipalUI.getInstance().atualizarPrincipal(pController.getPessoaPorId(idContato));
 
 				dispose();
 			} else {

@@ -21,11 +21,8 @@ import br.com.senai.pi.controller.EnderecoController;
 import br.com.senai.pi.controller.PessoaController;
 import br.com.senai.pi.model.Pessoa;
 
-public class Principal extends JFrame {
+public class PrincipalUI extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtNome;
@@ -37,25 +34,22 @@ public class Principal extends JFrame {
 	private JTextField txtUf;
 	private JTextField txtCidade;
 	private boolean editar;
-	PessoaController pessoa;
-	private static Principal pr;
-	EnderecoController endereco;
+	private PessoaController pessoa;
+	private static PrincipalUI pr;
+	private EnderecoController endereco;
 	private JTextField txtTelCelular;
 	private JTextField txtTelResidencial;
 	private JButton btnSalvar;
 	private JButton btnCancelar;
 	private JTextField txtIdpessoa;
 
-	/**
-	 * Launch the application.
-	 */
 	/*
 	 * METODO RESPONSAVEL POR VERIFICAR SE JÁ EXISTE UMA INSTANCIA DA TELA
 	 * PRINCIPAL CASO EXISTA O METODO RETORNA NULL
 	 */
-	public static Principal getInstance() {
+	public static PrincipalUI getInstance() {
 		if (pr == null) {
-			pr = new Principal();
+			pr = new PrincipalUI();
 		}
 		return pr;
 	}
@@ -64,7 +58,7 @@ public class Principal extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Principal frame = getInstance();
+					PrincipalUI frame = getInstance();
 					frame.setVisible(true);
 					frame.setTitle("Sistema Gerenciador de Adoção AdoteGO!");
 					frame.setLocationRelativeTo(null);
@@ -77,7 +71,7 @@ public class Principal extends JFrame {
 
 	// HABILITA OS CAMPOS DE TEXTO NO CADASTRO DA PESSOA AO CLICAR EM INSERIR NA
 	// TELA ListarPessoas
-	public String inserir() {
+	public void inserir() {
 		txtNome.setEditable(true);
 		txtTelCelular.setEditable(true);
 		txtTelResidencial.setEditable(true);
@@ -91,14 +85,12 @@ public class Principal extends JFrame {
 		btnSalvar.setEnabled(true);
 		btnCancelar.setEnabled(true);
 
-		return null;
-
 	}
 
 	// RETORNA OS DADOS DA TELA ListarPessoas PARA POSSIVEL ATUALIZACAO
 	public void atualizarPrincipal(Pessoa p) {
-		btnSalvar.setEnabled(true);
 
+		btnSalvar.setEnabled(true);
 		txtNome.setEditable(true);
 		txtTelCelular.setEditable(true);
 		txtTelResidencial.setEditable(true);
@@ -125,11 +117,11 @@ public class Principal extends JFrame {
 		editar = true;
 	}
 
-	public Principal(DefaultTableModel md) {
+	public PrincipalUI(DefaultTableModel md) {
 		super("Pessoas");
 	}
 
-	public Principal() {
+	public PrincipalUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1024, 768);
 		contentPane = new JPanel();
@@ -271,7 +263,7 @@ public class Principal extends JFrame {
 		btnSalvar.setEnabled(false);
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Verifica se os campos foram preenchidos
+				// VERIFICA SE OS CAMPOS OBRIGATORIOS FORAM PREENCHIDOS
 				if (txtNome.getText().equalsIgnoreCase("")
 						|| txtTelResidencial.getText().equalsIgnoreCase("")
 						|| txtEmail.getText().equalsIgnoreCase("")) {
@@ -351,7 +343,7 @@ public class Principal extends JFrame {
 		JButton btnListasPessoas = new JButton("Listas Pessoas");
 		btnListasPessoas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ListarPessoas lista = new ListarPessoas();
+				ListarPessoaUI lista = new ListarPessoaUI();
 				lista.setVisible(true);
 				lista.setLocationRelativeTo(null);
 			}
